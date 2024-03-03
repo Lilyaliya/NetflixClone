@@ -24,7 +24,7 @@ enum APIError: Error{
 class APICaller{
     static let shared = APICaller()
     
-    func getTrendingMovies(completion: @escaping (Result<[Movie], Error>) -> Void){
+    func getTrendingMovies(completion: @escaping (Result<[Title], Error>) -> Void){
         guard let url = NSURL(string: "\(Contents.baseURL)/3/trending/movie/day?language=ru-RU") as? URL
         else{
             return
@@ -50,12 +50,11 @@ class APICaller{
                 return
             }
             do {
-                let results = try JSONDecoder().decode(TrendingMoviesResponse.self, from: data)
+                let results = try JSONDecoder().decode(TrendingTitleResponse.self, from: data)
                 completion(.success(results.results))
-                print(results)
             }
             catch{
-                completion(.failure(error))
+                completion(.failure(APIError.failedToGetData))
             }
             
         })
@@ -64,7 +63,7 @@ class APICaller{
         
     }
     
-    func getTrendingTvs(completion: @escaping (Result<[Tv], Error>) -> Void){
+    func getTrendingTvs(completion: @escaping (Result<[Title], Error>) -> Void){
         guard let url = NSURL(string: "\(Contents.baseURL)/3/trending/tv/day?language=ru-RU") as? URL
         else{
             return
@@ -83,10 +82,10 @@ class APICaller{
             }
             
             do{
-                let results = try JSONDecoder().decode(TrendingTvsResponse.self, from: data)
-                print(results)
+                let results = try JSONDecoder().decode(TrendingTitleResponse.self, from: data)
+                completion(.success(results.results))
             }catch{
-                print(error.localizedDescription)
+                completion(.failure(APIError.failedToGetData))
             }
         })
         
@@ -95,7 +94,7 @@ class APICaller{
     
 //    https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1
     
-    func getUpcomingMovies(completion: @escaping (Result<[Movie], Error>) -> Void){
+    func getUpcomingMovies(completion: @escaping (Result<[Title], Error>) -> Void){
         guard let url = NSURL(string: "\(Contents.baseURL)/3/movie/upcoming?language=ru-RU&page=1") as? URL
         else{
             return
@@ -115,11 +114,11 @@ class APICaller{
             }
             
             do{
-                let results = try JSONDecoder().decode(TrendingMoviesResponse.self, from: data)
-                print(results)
+                let results = try JSONDecoder().decode(TrendingTitleResponse.self, from: data)
+                completion(.success(results.results))
             }
             catch{
-                print(error.localizedDescription)
+                completion(.failure(APIError.failedToGetData))
             }
         })
         
@@ -128,7 +127,7 @@ class APICaller{
     
 //    https://api.themoviedb.org/3/movie/popular?language=en-US&page=1
     
-    func getPopularMovies(completion: @escaping (Result<[Movie], Error>) -> Void){
+    func getPopularMovies(completion: @escaping (Result<[Title], Error>) -> Void){
         guard let url = NSURL(string: "\(Contents.baseURL)/3/movie/popular?language=ru-RU&page=1") as? URL
         else{
             return
@@ -147,11 +146,11 @@ class APICaller{
                 }
             
             do{
-                let results = try JSONDecoder().decode(TrendingMoviesResponse.self, from: data)
-                print(results)
+                let results = try JSONDecoder().decode(TrendingTitleResponse.self, from: data)
+                completion(.success(results.results))
             }
             catch{
-                print(error.localizedDescription)
+                completion(.failure(APIError.failedToGetData))
             }
         })
         
@@ -160,7 +159,7 @@ class APICaller{
     
 //    https://api.themoviedb.org/3/movie/top_rated?language=en-US&page=1
     
-    func getTopRatedMovies(completion: @escaping (Result<[Movie], Error>) -> Void){
+    func getTopRatedMovies(completion: @escaping (Result<[Title], Error>) -> Void){
         guard let url = NSURL(string: "\(Contents.baseURL)/3/movie/top_rated?language=ru-RU&page=1") as? URL
         else{
             return
@@ -177,10 +176,10 @@ class APICaller{
             }
             
             do{
-                let results = try JSONDecoder().decode(TrendingMoviesResponse.self, from: data)
-                print(results)
+                let results = try JSONDecoder().decode(TrendingTitleResponse.self, from: data)
+                completion(.success(results.results))
             }catch{
-                print(error.localizedDescription)
+                completion(.failure(APIError.failedToGetData))
             }
         })
         
