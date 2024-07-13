@@ -44,7 +44,6 @@ class CollectionViewTableViewCell: UITableViewCell {
         self.titles = titles
         DispatchQueue.main.async{ [weak self] in
             self?.collectionView.reloadData()
-            
         }
     }
 }
