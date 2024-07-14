@@ -186,4 +186,66 @@ class APICaller{
         task.resume()
     }
     
+    // https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=ru-RU&page=1&sort_by=popularity.desc
+
+    func getDiscoverMovies(completion: @escaping (Result<[Title], Error>) -> Void) {
+        guard let url = NSURL(string: "\(Contents.baseURL)/3/discover/movie?include_adult=false&include_video=false&language=ru-RU&page=1&sort_by=popularity.desc") as? URL
+        else {
+            return
+        }
+        
+        let request = NSMutableURLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = Contents.headers
+        
+        let task = URLSession.shared.dataTask(with: request as URLRequest, completionHandler: {(data, response, error) -> Void in
+            guard let data = data, error == nil else{
+                print(error as Any)
+                return
+            }
+            
+            do{
+                let results = try JSONDecoder().decode(TrendingTitleResponse.self, from: data)
+                completion(.success(results.results))
+            }catch{
+                completion(.failure(APIError.failedToGetData))
+            }
+        })
+        
+        task.resume()
+    }
+    
+//    https://api.themoviedb.org/3/search/movie?query=%D0%B0%D0%BD&include_adult=false&language=ru-RU&page=1
+    func search(with query: String, completion: @escaping (Result<[Title], Error>) -> Void) {
+        guard let query = query.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) else {
+            return
+        }
+        guard let url = NSURL(string: "\(Contents.baseURL)/3/search/movie?query=\(query)&include_adult=false&language=ru-RU&page=1") as? URL
+        else {
+            return
+        }
+        
+        let request = NSMutableURLRequest(url: url, cachePolicy: .useProtocolCachePolicy, timeoutInterval: 10.0)
+        request.httpMethod = "GET"
+        request.allHTTPHeaderFields = Contents.headers
+        
+        let task = URLSession.shared.dataTask(with: request as URLRequest, completionHandler: {(data, response, error) -> Void in
+            guard let data = data, error == nil else{
+                print(error as Any)
+                return
+            }
+            
+            do{
+                let results = try JSONDecoder().decode(TrendingTitleResponse.self, from: data)
+                completion(.success(results.results))
+            }catch{
+                completion(.failure(APIError.failedToGetData))
+            }
+        })
+        
+        task.resume()
+    }
+    
 }
+
+

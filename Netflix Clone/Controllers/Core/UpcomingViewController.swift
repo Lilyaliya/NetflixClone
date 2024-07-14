@@ -62,7 +62,6 @@ extension UpcomingViewController: UITableViewDelegate, UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier, for: indexPath) as? TitleTableViewCell else {
             return UITableViewCell()
         }
-//        cell.textLabel?.text = titles[indexPath.row].title ?? "Неизвестно"
         cell.configure(with: TitleViewModel(titleName: titles[indexPath.row].title ?? "Неизвестно", posterURL: titles[indexPath.row].poster_path ?? ""))
         return cell
     }
