@@ -21,6 +21,7 @@ class HomeViewController: UIViewController {
     
     private let homeFeedTable: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
+        table.showsVerticalScrollIndicator = false
         table.register(CollectionViewTableViewCell.self, forCellReuseIdentifier: CollectionViewTableViewCell.identifier)
         return table
     }()
@@ -36,8 +37,6 @@ class HomeViewController: UIViewController {
         
         homeFeedTable.delegate = self
         homeFeedTable.dataSource = self
-        
-//        fetchData()
     }
     
     private func configureNavBar(){
@@ -68,7 +67,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource{
         else{
             return UITableViewCell()
         }
-        
+        cell.delegate = self
         switch indexPath.section {
         case Sections.TrendingMovies.rawValue:
             
@@ -157,4 +156,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource{
         
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0, -offset))
     }
+}
+
+extension HomeViewController: CollectionViewTableViewCellDelegate {
+    func collectionViewTableViewCellDidTapCell(_ cell: CollectionViewTableViewCell, viewModel: TitlePreviewViewModel) {
+        DispatchQueue.main.async { [weak self] in
+            let vc = TitlePreviewViewController()
+            vc.configure(with: viewModel)
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+    
 }
