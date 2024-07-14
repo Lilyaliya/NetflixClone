@@ -46,6 +46,7 @@ class TitlePreviewViewController: UIViewController {
         view.addSubview(overviewLabel)
         view.addSubview(downloadButton)
         
+        navigationController?.navigationBar.tintColor = .white
         configureConstraints()
     }
 
